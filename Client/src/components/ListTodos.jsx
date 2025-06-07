@@ -5,6 +5,25 @@ import { EditTodos } from './EditTodos';
 export const ListTodos = () => {
   const [todos, setTodos] = useState([]);
 
+  // Update status function
+
+  const toggleStatus = async (id, newStatus) => {
+    try {
+      await fetch(`http://localhost:5000/todos/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      setTodos(
+        todos.map((todo) =>
+          todo.todo_id === id ? { ...todo, status: newStatus } : todo
+        )
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // Delete todo function
 
   const deleteTodo = async (id) => {
@@ -33,7 +52,7 @@ export const ListTodos = () => {
 
   useEffect(() => {
     getTodos();
-  }, [todos]);
+  }, []);
   // console.log(todos);
 
   return (
@@ -41,6 +60,7 @@ export const ListTodos = () => {
       <table className="table text-center mt-5">
         <thead>
           <tr>
+            <th>Status</th>
             <th>Description</th>
             <th>Edit</th>
             <th>Delete</th>
@@ -55,7 +75,16 @@ export const ListTodos = () => {
           <tr> */}
           {todos.map((todo) => (
             <tr key={todo.todo_id}>
-              <td>{todo.description}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={todo.status}
+                  onChange={() => toggleStatus(todo.todo_id, !todo.status)}
+                />
+              </td>
+              <td>
+                {todo.status ? <s>{todo.description}</s> : todo.description}
+              </td>
               <td>
                 <EditTodos todo={todo} />
               </td>

@@ -13,6 +13,7 @@ export const InputTodo = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+      setDescription('');
       console.log(body);
     } catch (error) {
       console.log(error.message);
@@ -23,7 +24,7 @@ export const InputTodo = () => {
     <>
       <h1 className="text-center mt-5">Input Todo</h1>
       <form
-        className="d-flex justify-content-center mt-5"
+        className="d-flex justify-content-center mt-5 gap-2"
         onSubmit={onSubmitForm}
       >
         <input

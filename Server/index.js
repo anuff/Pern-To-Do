@@ -27,15 +27,15 @@ app.get("/todos", async(req, res) => {
 
 app.post("/todos", async(req, res) => {
     try {
-        const {description} = req.body
-        console.log(description)
-        const newTodo = await pool.query("INSERT INTO todo (description) VALUES($1) RETURNING *", [description]);
+        const {description, status = false } = req.body
+        // console.log(description)
+        const newTodo = await pool.query("INSERT INTO todo (description, status) VALUES($1, $2) RETURNING *", [description, status]);
         res.json(newTodo.rows)
     } catch (error) {
         console.log(error.message)
     }
 })
-
+ 
 // Get a specific todo
 
 app.get("/todos/:id", async(req, res) => {
@@ -56,6 +56,19 @@ app.put("/todos/:id", async(req, res) => {
         const {description} = req.body;
         const updateTodo = await pool.query("UPDATE todo SET description = $1 WHERE todo_id = $2",[description, id]);
         res.json("Todo was updated")
+    } catch (error) {
+        console.log(error.message)
+    }
+})
+
+// Update status
+
+app.put("/todos/:id/status", async(req, res) => {
+    try {
+        const {id} = req.params;
+        const {status} = req.body;
+        const updateStatus = await pool.query("UPDATE todo SET status = $1 WHERE todo_id = $2", [status, id]);
+        res.json("Todo status was updated");
     } catch (error) {
         console.log(error.message)
     }

@@ -1,4 +1,3 @@
-import './App.css';
 import { InputTodo } from './components/inputTodos';
 import { ListTodos } from './components/ListTodos';
 
